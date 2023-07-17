@@ -1,0 +1,30 @@
+name: Render changes
+on: push
+
+jobs:
+  render-changes:
+    name: Render changes
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Clear html dir
+        run: make clean
+
+      - name: Build html files
+        run: make html
+
+      - name: Changes
+        id: changes
+        run: |
+          git rm -r --cached html/ || true
+          git add html/*.html
+          git diff --exit-code HEAD || echo "::set-output name=update_required::true"
+
+      - name: Commit changes
+        if: steps.changes.outputs.update_required == 'true'
+        uses: EndBug/add-and-commit@v9
+        with:
+          message: 'Update rendered html'
+          add: 'html/*.html'
