@@ -5,6 +5,7 @@ ENV_DIR?=values
 OUT_DIR?=docs
 
 MAKE_DIRS=$(BUILD_DIR) $(OUT_DIR)
+CLEAN_FILES=$(BUILD_DIR) $(OUT_DIR)/*.html
 
 VALUES=$(wildcard $(ENV_DIR)/*.env)
 HTMLS=${subst $(ENV_DIR),$(OUT_DIR),$(VALUES:.env=.html)}
@@ -25,4 +26,4 @@ docs: $(HTMLS)
 all: docs
 
 clean:
-	rm -rvf $(MAKE_DIRS)
+	rm -rvf $(CLEAN_FILES)
